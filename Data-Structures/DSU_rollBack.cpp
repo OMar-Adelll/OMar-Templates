@@ -28,7 +28,7 @@ struct DSU
     {
         if (parent[i] == i)
             return i;
-        return parent[i] = findLeader(parent[i]);
+        return findLeader(parent[i]);
     }
 
     bool sameGroup(int u, int v)
