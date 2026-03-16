@@ -4,33 +4,47 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define int long long
 #define ll long long
-#define sz(x) (int)x.size()
 #define nl '\n'
-#define memo(x) memset(x, -1, sizeof(x))
+#define sz(x) (int)(x).size()
+#define all(v) v.begin(), v.end()
+#define rall(v) v.rbegin(), v.rend()
+#define updmax(a, b) a = max(a, b)
+#define updmin(a, b) a = min(a, b)
+#define fixed(n) fixed << setprecision(n)
+#define memo(arr) memset(arr, -1, sizeof(arr))
+void debug() { cout << "[DEBUG]" << nl; }
 
-const int N = 1e3;
-const int M = 1e5;
-int head[N], to[M], nxt[M], wt[M], ne = 0;
+const ll OO = (ll)4e18;
+const int MOD = 1000000007;
+const long double EPS = 1e-12;
+const long double PI = acos(-1.0L);
 
-void init()
+struct ForwardStar
 {
-    memo(head);
-    ne = 0;
-}
+    static const int N = 1e3, M = 1e5;
+    int head[N], to[M], nxt[M], wt[M], ne = 0;
 
-void addEdge(int u, int v, int w = 0)
-{
-    to[ne] = v;
-    wt[ne] = w;
-    nxt[ne] = head[u];
-    head[u] = ne++;
-}
+    void init()
+    {
+        memo(head);
+        ne = 0;
+    }
+
+    void addEdge(int u, int v, int w = 0)
+    {
+        to[ne] = v;
+        wt[ne] = w;
+        nxt[ne] = head[u];
+        head[u] = ne++;
+    }
+};
 
 void mora_solve()
 {
-    init();
-
+    ForwardStar ds;
+    ds.init();
     int n, m;
     cin >> n >> m;
 
@@ -38,25 +52,32 @@ void mora_solve()
     {
         int u, v;
         cin >> u >> v;
-        addEdge(u, v);
-        addEdge(v, u);
+        ds.addEdge(u, v);
+        ds.addEdge(v, u);
     }
 
     for (int u = 1; u <= n; u++)
     {
-        cout << u << " : ";
-        for (int e = head[u]; e != -1; e = nxt[e])
+        cout << "[ " << u << " ] : ";
+        for (auto e = ds.head[u]; e != -1; e = ds.nxt[e])
         {
-            int v = to[e], w = wt[e];
-            cout << v << " ";
+            cout << ds.to[e] << " ";
         }
-
         cout << nl;
     }
 }
 
-int main()
+signed main()
 {
-    mora_solve();
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int q = 1;
+    // cin >> q;
+    for (int tc = 1; tc <= q; tc++)
+    {
+        mora_solve();
+        // if (tc != q) cout << nl;
+    }
     return 0;
 }
