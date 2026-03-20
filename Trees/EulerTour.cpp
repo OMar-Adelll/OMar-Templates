@@ -8,6 +8,9 @@ using namespace std;
 #define sz(x) (int)x.size()
 #define nl '\n'
 
+// This euler to is for trees only
+// This way based on flatten the trees
+
 const int N = 2e5 + 5;
 vector<vector<int>> adj;
 int In[N], Out[N], timer = 0;
