@@ -8,6 +8,7 @@ using namespace std;
 struct DSU
 {
     vector<int> parent, group;
+    int comp;
     DSU(int n)
     {
         parent.resize(n + 1);
@@ -18,35 +19,34 @@ struct DSU
             parent[i] = i;
             group[i] = 1;
         }
+        comp = 0;
     }
 
-    int findLeader(int i)
+    int find(int x)
     {
-        if (parent[i] == i)
-            return i;
-        return parent[i] = findLeader(parent[i]);
+        if (parent[x] == x)
+            return x;
+        return parent[x] = find(parent[x]);
     }
 
-    bool sameGroup(int u, int v)
+    bool Union(int u, int v)
     {
-        return findLeader(u) == findLeader(v);
+        int lu = find(u), lv = find(v);
+
+        if (lu == lv)
+            return false;
+
+        if (group[lu] < group[lv])
+            swap(lu, lv);
+
+        group[lu] += group[lv];
+        parent[lv] = lu;
+        comp++;
+        return true;
     }
 
-    void Union(int u, int v)
-    {
-        int leader1 = findLeader(u);
-        int leader2 = findLeader(v);
-
-        if (leader1 == leader2)
-            return;
-
-        if (group[leader1] < group[leader2])
-            swap(leader1, leader2);
-
-        group[leader1] += group[leader2];
-        parent[leader2] = leader1;
-    }
-    int get_size(int u) { return group[findLeader(u)]; }
+    bool same(int u, int v) { return find(u) == find(v); }
+    int Size(int u) { return group[find(u)]; }
 };
 
 int main()
