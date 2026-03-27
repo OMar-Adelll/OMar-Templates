@@ -121,11 +121,11 @@ bool Directed_Euler() // this function for path & circuit
     cout << "Yes" << endl;
 
     for (auto &i : nodes)
-        cout << i - 1 << ' ';
+        cout << i - 1 << " ";
     cout << endl;
 
     for (auto &i : edges)
-        cout << i << ' ';
+        cout << i << " ";
     cout << endl;
 
     return true;
