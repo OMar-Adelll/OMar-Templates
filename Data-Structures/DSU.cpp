@@ -19,7 +19,7 @@ struct DSU
             parent[i] = i;
             group[i] = 1;
         }
-        comp = 0;
+        comp = n;
     }
 
     int find(int x)
@@ -41,7 +41,8 @@ struct DSU
 
         group[lu] += group[lv];
         parent[lv] = lu;
-        comp++;
+        comp--;
+        
         return true;
     }
 
