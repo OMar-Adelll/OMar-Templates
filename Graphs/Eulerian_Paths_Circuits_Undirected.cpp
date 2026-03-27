@@ -55,7 +55,7 @@ const long double PI = acos(-1.0L);
 int n, m;
 vector<vector<pair<int, int>>> adj; // this will include the vertex and edge id
 vector<int> deg;
-bool Undirected_Euler() // this functon for path & circuit
+bool Undirected_Euler() // this function for path & circuit
 {
     int st = -1, cycle_st = -1, odds = 0;
     for (int u = 1; u <= n; u++)
