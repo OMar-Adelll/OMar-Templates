@@ -4,10 +4,22 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define int long long
 #define ll long long
-#define sz(x) (int)x.size()
 #define nl '\n'
+#define sz(x) (int)(x).size()
+#define all(v) v.begin(), v.end()
+#define rall(v) v.rbegin(), v.rend()
+#define updmax(a, b) a = max(a, b)
+#define updmin(a, b) a = min(a, b)
+#define fixed(n) fixed << setprecision(n)
 #define memo(arr) memset(arr, -1, sizeof(arr))
+void debug() { cout << "[DEBUG]" << nl; }
+
+const ll OO = (ll)4e18;
+const int MOD = 1000000007;
+const long double EPS = 1e-12;
+const long double PI = acos(-1.0L);
 
 /*
    ## EULER TOUR & EULER CIRCUIT ##
@@ -40,91 +52,101 @@ using namespace std;
 
 */
 
-// Forward Star datastructure
-const int N = 2e5 + 5, M = 4e5 + 5;
-int head[N], to[M], nxt[M], wt[M], ne = 0;
-
-void init()
+int n, m;
+vector<vector<pair<int, int>>> adj; // this will include the vertex and edge id
+vector<int> deg;
+bool Undirected_Euler() // this functon for path & circuit
 {
-    memo(head);
-    ne = 0;
-}
-
-void addEdge(int u, int v, int w = 0)
-{
-    to[ne] = v;
-    wt[ne] = w;
-    nxt[ne] = head[u];
-    head[u] = ne++;
-}
-
-void addBiEdge(int u, int v, int w = 0)
-{
-    addEdge(u, v, w), addEdge(v, u, w);
-}
-
-// data-structures
-int deg[N], vis[2 * M], ans[2 * M], si, vid = 1;
-
-void Euler(int u)
-{
-    for (int e = head[u]; e != -1; e = nxt[e])
+    int st = -1, cycle_st = -1, odds = 0;
+    for (int u = 1; u <= n; u++)
     {
-        int v = to[e];
-        if (vis[e] == vid)
-            continue;
-        vis[e] = vis[e ^ 1] = vid; // mark both directions
-        Euler(v);
-        ans[si++] = e;
-    }
-}
-
-// This returns true if Euler tour(path)/circuit exists.
-// sets st = valid start node
-int n; // this from input
-bool Euler_Undirected(int &st, int m)
-{
-    int odd = 0;
-    st = -1;
-    for (int i = 0; i < n; i++)
-    {
-        if (deg[i] > 0 && st == -1)
-        {
-            st = i;
-        }
-
-        if (deg[i] & 1)
-        {
-            odd++, st = i;
-        }
+        if (deg[u] & 1)
+            odds++, (st == -1 ? st = u : st);
+        if (!adj[u].empty())
+            cycle_st = u;
     }
 
-    if (!(odd == 0 || odd == 2))
-    {
+    if (odds > 2 || odds == 1)
         return false;
-    }
-
     if (st == -1)
+        st = cycle_st;
+
+    if (cycle_st == -1)
     {
-        si = 0;
+        cout << "Yes" << nl << 0 << nl << nl;
         return true;
     }
 
-    si = 0, vid++;
-    Euler(st);
-
-    if (si != m)
+    vector<int> nodes, edges, vis(m);
+    auto dfs = [&](auto &&dfs, int u) -> void
     {
-        return false;
-    }
+        while (!adj[u].empty())
+        {
+            auto [v, e] = adj[u].back();
+            adj[u].pop_back();
 
-    reverse(ans, ans + si);
+            if (vis[e])
+                continue;
+
+            vis[e] = 1;
+            dfs(dfs, v);
+            nodes.push_back(v);
+            edges.push_back(e);
+        }
+    };
+
+    dfs(dfs, st);
+    if (edges.size() != m)
+        return false;
+
+    nodes.push_back(st);
+    ::reverse(edges.begin(), edges.end());
+    ::reverse(nodes.begin(), nodes.end());
+
+    cout << "Yes" << endl;
+
+    for (auto &i : nodes)
+        cout << i - 1 << ' ';
+    cout << endl;
+
+    for (auto &i : edges)
+        cout << i << ' ';
+    cout << endl;
+
     return true;
 }
 
-int main()
+void mora_solve()
 {
-    cin >> n;
+    cin >> n >> m;
+    adj.assign(n + 1, {});
+    deg.assign(n + 1, 0);
+    for (int e = 0; e < m; e++)
+    {
+        int u, v;
+        cin >> u >> v;
+        u++, v++;
+        adj[u].push_back({v, e});
+        adj[v].push_back({u, e});
 
+        deg[u]++, deg[v]++;
+    }
+
+    if (!Undirected_Euler())
+        cout << "No" << nl;
+}
+
+signed main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int q = 1;
+    cin >> q;
+    for (int tc = 1; tc <= q; tc++)
+    {
+        mora_solve();
+        // if (tc != q) cout << nl;
+    }
     return 0;
 }
