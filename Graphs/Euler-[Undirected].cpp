@@ -116,7 +116,7 @@ bool Undirected_Euler() // this functon for path & circuit
     return true;
 }
 
-void mora_solve()
+void solve()
 {
     cin >> n >> m;
     adj.assign(n + 1, {});
@@ -145,7 +145,7 @@ signed main()
     cin >> q;
     for (int tc = 1; tc <= q; tc++)
     {
-        mora_solve();
+        solve();
         // if (tc != q) cout << nl;
     }
     return 0;
