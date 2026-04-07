@@ -16,17 +16,19 @@ struct sqrt_decomposition
     {
         n = si;
         len = sqrt(si) + 1;
-        blocksNum = n / len;
+        blocksNum = (n + len - 1) / len;
+
         arr.assign(n, 0);
-        block.resize(len);
+        block.resize(blocksNum);
     }
     sqrt_decomposition(vector<int> &a)
     {
         n = a.size();
         len = sqrt(n) + 1;
-        blocksNum = n / len;
+        blocksNum = (n + len - 1) / len;
+
         arr = a;
-        block.resize(len);
+        block.resize(blocksNum);
         for (int i = 0; i < n; i++)
             block[i / len] += arr[i];
     }
