@@ -10,25 +10,26 @@ using namespace std;
 
 struct sqrt_decomposition
 {
-    int n, SQ, blocksNum;
+    int n, SQ, BlocksNum;
     vector<int> arr, block;
-    sqrt_decomposition(int si)
+    sqrt_decomposition(int N)
     {
-        n = si;
-        SQ = sqrt(si) + 1;
-        blocksNum = (n + SQ - 1) / SQ;
+        n = N;
+        SQ = sqrt(N) + 1;
+        BlocksNum = (n + SQ - 1) / SQ;
 
-        arr.assign(n, 0);
-        block.resize(blocksNum);
+        arr.assign(N, 0);
+        block.assign(BlocksNum, 0);
     }
-    sqrt_decomposition(vector<int> &a)
-    {
-        n = a.size();
-        SQ = sqrt(n) + 1;
-        blocksNum = (n + SQ - 1) / SQ;
 
-        arr = a;
-        block.resize(blocksNum);
+    sqrt_decomposition(vector<int> &nums)
+    {
+        n = nums.size();
+        SQ = sqrt(n) + 1;
+        BlocksNum = (n + SQ - 1) / SQ;
+
+        arr = nums;
+        block.assign(BlocksNum, 0);
         for (int i = 0; i < n; i++)
             block[i / SQ] += arr[i];
     }
@@ -55,7 +56,33 @@ struct sqrt_decomposition
         return ans;
     }
 
-    int query(const int l, const int r) { return query(r) - query(l - 1); }
+    int query(int l, int r)
+    {
+        if (l > r)
+            return 0;
+
+        int st = l / SQ;
+        int en = r / SQ;
+
+        int ans = 0;
+        if (st == en)
+        {
+            for (int i = l; i <= r; i++)
+                ans += arr[i];
+            return ans;
+        }
+
+        for (int i = st + 1; i < en; i++)
+            ans += block[i];
+
+        for (int i = l; i < (st + 1) * SQ && i < n; i++)
+            ans += arr[i];
+
+        for (int i = en * SQ; i <= r && i < n; i++)
+            ans += arr[i];
+
+        return ans;
+    }
 };
 
 int main()
