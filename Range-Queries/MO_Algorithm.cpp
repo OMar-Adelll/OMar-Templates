@@ -11,8 +11,6 @@ using namespace std;
 const int N = 200000 + 5;
 const int SQ = 450;
 
-ll n, q, arr[N], ans[N];
-Query query[N];
 
 struct Query
 {
@@ -27,6 +25,9 @@ struct Query
         return r < other.r;
     }
 };
+
+ll n, q, arr[N], ans[N];
+Query query[N];
 
 // Change these depending on problem
 ll res = 0;
