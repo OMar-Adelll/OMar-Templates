@@ -36,7 +36,7 @@ public:
         BIT.assign(n + 5, 0);
     }
 
-    Fenwick_Tree(vector<int> &arr) : Fenwick_Tree(sz(arr))
+    Fenwick_Tree(vector<T> &arr) : Fenwick_Tree(sz(arr))
     {
         for (int i = 1; i <= n; i++)
             add(i, arr[i - 1]);
