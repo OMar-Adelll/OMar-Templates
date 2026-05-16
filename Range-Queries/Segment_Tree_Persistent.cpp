@@ -7,6 +7,7 @@ using namespace std;
 #define ll long long
 #define sz(x) (int)x.size()
 #define nl '\n'
+
 // NOTE :  to make update you will change log(n) nodes only
 // 1-based indexing
 template <typename T>
