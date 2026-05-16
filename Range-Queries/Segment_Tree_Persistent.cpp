@@ -7,7 +7,6 @@ using namespace std;
 #define ll long long
 #define sz(x) (int)x.size()
 #define nl '\n'
-
 // NOTE :  to make update you will change log(n) nodes only
 // 1-based indexing
 template <typename T>
@@ -35,7 +34,7 @@ private:
     };
 
     // PST
-    vector<Node *> roots = {new Node()};
+    vector<Node *> roots;
     int n;
     T Lx, Rx;
 
@@ -45,6 +44,7 @@ private:
             return new Node(nums[lx - 1]);
 
         int mid = lx + (rx - lx) / 2;
+
         Node *L = build(nums, lx, mid);
         Node *R = build(nums, mid + 1, rx);
 
@@ -53,11 +53,6 @@ private:
 
     Node *merge(Node *l, Node *r)
     {
-        if (!l)
-            return r;
-        if (!r)
-            return l;
-
         Node *node = new Node();
         node->val = l->val + r->val;
         return node;
@@ -69,7 +64,7 @@ private:
             return root;
 
         if (lx == rx)
-            return new Node(val);
+            return new Node(root->val + val);
 
         int mid = lx + (rx - lx) / 2;
         Node *L = update(root->left, idx, val, lx, mid);
@@ -80,10 +75,7 @@ private:
 
     Node *query(Node *root, int l, int r, int lx, int rx)
     {
-        if (root == nullptr)
-            return new Node();
-
-        if (r < lx || l > rx)
+        if (!root || r < lx || l > rx)
             return new Node();
 
         if (lx >= l && rx <= r)
@@ -94,6 +86,31 @@ private:
         Node *R = query(root->right, l, r, mid + 1, rx);
 
         return merge(L, R);
+    }
+
+    int count_greater(Node *l, Node *r, int k, int lx, int rx)
+    {
+        if (k < lx)
+            return r->val - l->val;
+
+        if (k >= rx)
+            return 0;
+
+        int mid = lx + (rx - lx) / 2;
+
+        return count_greater(l->left, r->left, k, lx, mid) + count_greater(l->right, r->right, k, mid + 1, rx);
+    }
+
+    T kth(Node *l, Node *r, int k, T lx, T rx)
+    {
+        if (lx == rx)
+            return lx;
+        T m = lx + (rx - lx) / 2;
+        int count = r->left->val - l->left->val; // Count of elements in the left subtree
+        if (count >= k)
+            return kth(l->left, r->left, k, lx, m);
+        else
+            return kth(l->right, r->right, k - count, m + 1, rx);
     }
 
 public:
@@ -113,7 +130,14 @@ public:
 
     // clones a version and pushes it into PST
     void clone(const int version) { roots.push_back(roots[version]); }
+
+    // count the number of elements greater than k in the range [l, r]
+    int count_greater(int l, int r, int k) { return count_greater(roots[l - 1], roots[r], k, Lx, Rx); }
+
+    // find index of the k-th smallest element in the range [l, r]
+    T kth(int l, int r, int k) { return kth(roots[l - 1], roots[r], k, Lx, Rx); }
 };
+
 
 int main()
 {
